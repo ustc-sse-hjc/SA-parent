@@ -1,0 +1,104 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop" 
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:task="http://www.springframework.org/schema/task"
+	xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+		http://www.springframework.org/schema/beans/spring-beans-4.0.xsd 
+		http://www.springframework.org/schema/mvc 
+		http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd 
+		http://www.springframework.org/schema/context 
+		http://www.springframework.org/schema/context/spring-context-4.0.xsd 
+		http://www.springframework.org/schema/aop 
+		http://www.springframework.org/schema/aop/spring-aop-4.0.xsd 
+		http://www.springframework.org/schema/tx 
+		http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
+		http://www.springframework.org/schema/task
+   		http://www.springframework.org/schema/task/spring-task-4.0.xsd
+		http://code.alibabatech.com/schema/dubbo        
+		http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+	
+	<!-- 读取配置文件,可以读取多个 -->
+	<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<list>
+				<value>classpath:jdbc.properties</value>
+			</list>
+		</property>
+	</bean>
+		
+	  <!-- 数据源  阿里巴巴出品  druid   -->
+	<bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" destroy-method="close">
+		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
+		<property name="url" value="${jdbc.url}" />
+		<property name="username" value="${jdbc.username}" />
+		<property name="password" value="${jdbc.password}" />
+		<property name="initialSize" value="${jdbc.initialSize}"></property>
+		<property name="maxActive" value="${jdbc.maxActive}"></property>
+		<property name="minIdle" value="1"></property>
+		<property name="maxWait" value="30000"></property>
+		<property name="timeBetweenEvictionRunsMillis" value="60000"></property>
+		<property name="minEvictableIdleTimeMillis" value="300000"></property>
+		<property name="validationQuery" value="SELECT 1 "></property>
+		<property name="testWhileIdle" value="true"></property>
+		<property name="poolPreparedStatements" value="true"></property>
+		<property name="maxPoolPreparedStatementPerConnectionSize" value="20"></property>
+		<property name="filters" value="stat,slf4j" />
+		<property name="proxyFilters">
+			<list>
+				<ref bean="stat-filter" />
+				<ref bean="log-filter" />
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="log-filter" class="com.alibaba.druid.filter.logging.Slf4jLogFilter">
+		<property name="resultSetLogEnabled" value="true" />
+		<property name="statementExecutableSqlLogEnable" value="true" />
+	</bean>
+
+	<bean id="stat-filter" class="com.alibaba.druid.filter.stat.StatFilter">
+		<property name="slowSqlMillis" value="30000" />
+		<property name="logSlowSql" value="true" />
+		<property name="mergeSql" value="true" />
+	</bean>
+	<!-- 事务管理-->
+	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource"/>
+	</bean>
+	 <!-- 拦截器方式配置事物,方法命名记得要规范 -->
+	<tx:advice id="txAdvice" transaction-manager="transactionManager">
+		<tx:attributes>
+			<tx:method name="select*" read-only="true" propagation="REQUIRED"/>
+			<tx:method name="find*" read-only="true" propagation="REQUIRED"/>
+			<tx:method name="query*" read-only="true" propagation="REQUIRED"/>
+			<tx:method name="get*" read-only="true" propagation="REQUIRED"/>
+			<tx:method name="search*" read-only="true" propagation="REQUIRED"/>
+			<tx:method name="is*" read-only="true" propagation="REQUIRED"/>
+			<tx:method name="save*" propagation="REQUIRED" rollback-for="Exception,RuntimeException"/>
+			<tx:method name="create*" propagation="REQUIRED" rollback-for="Exception,RuntimeException"/>
+			<tx:method name="update*" propagation="REQUIRED" rollback-for="Exception,RuntimeException"/>
+			<tx:method name="add*" propagation="REQUIRED" rollback-for="Exception,RuntimeException"/>
+			<tx:method name="delete*" propagation="REQUIRED" rollback-for="Exception,RuntimeException"/>
+			<tx:method name="execute*" propagation="REQUIRED" rollback-for="Exception,RuntimeException"/>
+			<tx:method name="remove*" propagation="REQUIRED" rollback-for="Exception,RuntimeException"/>
+			<tx:method name="put*" propagation="REQUIRED" rollback-for="Exception,RuntimeException"/>
+			<tx:method name="import*" propagation="REQUIRED" rollback-for="Exception,RuntimeException"/>
+			<tx:method name="submit*" propagation="REQUIRED" rollback-for="Exception,RuntimeException"/>
+			<tx:method name="cancel*" propagation="REQUIRED" rollback-for="Exception,RuntimeException"/>
+			<tx:method name="send*" propagation="REQUIRED" rollback-for="Exception,RuntimeException"/>
+			<tx:method name="edit*" propagation="REQUIRED" rollback-for="Exception,RuntimeException"/>
+			<tx:method name="handle*" propagation="REQUIRED" rollback-for="Exception,RuntimeException"/>
+			<tx:method name="close*" propagation="REQUIRED" rollback-for="Exception,RuntimeException"/>
+			<tx:method name="export*" propagation="REQUIRED" rollback-for="Exception,RuntimeException"/>
+		</tx:attributes>
+	</tx:advice>
+	
+	<aop:config>
+		<aop:pointcut id="transactionPointcut"
+			expression="execution(* com.test..*ServiceImpl.*(..))" />
+		<aop:advisor pointcut-ref="transactionPointcut" advice-ref="txAdvice" />
+	</aop:config>
+</beans>

@@ -1,0 +1,42 @@
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:task="http://www.springframework.org/schema/task"
+	xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+		http://www.springframework.org/schema/beans/spring-beans-4.0.xsd 
+		http://www.springframework.org/schema/mvc 
+		http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd 
+		http://www.springframework.org/schema/context 
+		http://www.springframework.org/schema/context/spring-context-4.0.xsd 
+		http://www.springframework.org/schema/aop 
+		http://www.springframework.org/schema/aop/spring-aop-4.0.xsd 
+		http://www.springframework.org/schema/tx 
+		http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
+		http://www.springframework.org/schema/task
+   		http://www.springframework.org/schema/task/spring-task-4.0.xsd
+		http://code.alibabatech.com/schema/dubbo        
+		http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+
+	<!-- Dubbo消费方 -->
+	<!-- 1：名称 计算机 区别 唯一 -->
+	<dubbo:application name="test-controller" />
+	<dubbo:registry protocol="zookeeper"
+		address="127.0.0.1:2181" />
+	<!-- <dubbo:registry address="N/A" check="false"/> -->
+
+	<dubbo:reference
+		interface="com.test.core.service.OpenService" id="openService"
+		url="dubbo://127.0.0.1:20880" />
+	<dubbo:reference
+		interface="com.test.core.service.PersonService" id="personService"
+		url="dubbo://127.0.0.1:20880" />
+	<!-- 全局设置 -->
+	<dubbo:consumer timeout="600000" check="false" />
+	
+</beans>
