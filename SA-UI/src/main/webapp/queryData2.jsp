@@ -47,7 +47,7 @@
 
 <%
  Class.forName("com.mysql.jdbc.Driver").newInstance();
- Connection con=java.sql.DriverManager.getConnection("jdbc:mysql://202.141.183.37:3306/sa?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC","root","19971028");
+ Connection con=java.sql.DriverManager.getConnection("jdbc:mysql://localhost:3306/sa?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC","root","0000");
 Statement stmt=con.createStatement();
 
 ResultSet rst=stmt.executeQuery("select * from server");

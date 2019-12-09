@@ -33,7 +33,7 @@ public class GetPersonServiceImpl implements PersonService {
 			Class.forName("com.mysql.jdbc.Driver");
 			//远程调用
 //			Connection conn= DriverManager.getConnection("jdbc:mysql://192.168.1.102:3306/sa?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC","root","guo5251314");
-			Connection conn= DriverManager.getConnection("jdbc:mysql://202.141.183.37:3306/sa?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC","root","19971028");
+			Connection conn= DriverManager.getConnection("jdbc:mysql://localhost:3306/sa?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC","root","0000");
 			// 2.获得数据连接
 //			Connection conn = DriverManager.getConnection(url, username, password);
 			// 3.使用数据库的连接创建声明
