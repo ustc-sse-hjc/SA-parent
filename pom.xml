@@ -39,7 +39,7 @@
 		<opensymphony-version>2.4.2</opensymphony-version>
 		<freemarker-version>2.3.18</freemarker-version>
 		<druid.version>1.0.9</druid.version>
-		<commons-collections-version>1.0</commons-collections-version>
+		<commons-collections-version>3.2.2</commons-collections-version>
 		<commons-fileupload-version>1.2.2</commons-fileupload-version>
 		<org.apache.commons-version>3.1</org.apache.commons-version>
 		<commons-codec-version>1.6</commons-codec-version>
